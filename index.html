@@ -15,7 +15,7 @@
             background: #1a1a1a;
             color: #fff;
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            overflow-x: hidden; /* Disable horizontal scrolling */
             text-align: center;
         }
 
@@ -98,10 +98,14 @@
         #typed-message {
             font-size: 1.5em;
             margin-top: 10px;
-            white-space: pre-wrap;
-            overflow: hidden;
+            padding: 10px;
+            white-space: pre-wrap;  /* Preserves indentation & new lines */
+            overflow-y: auto; /* Allows vertical scrolling if content is long */
+            max-height: 300px; /* Limits height to prevent breaking layout */
+            width: 80%;
+            max-width: 600px;
             border-right: 2px solid white;
-            width: 100%;
+            text-align: left;
         }
     </style>
 </head>
@@ -120,7 +124,7 @@
     <audio id="music" src="your-romantic-song.mp3"></audio>
 
     <script>
-        // ✅ Fixed countdown time variable
+        // ✅ Set countdown to 10 seconds for testing
         const valentinesDay = new Date().getTime() + 10000; 
 
         const timer = setInterval(function() {
@@ -136,7 +140,6 @@
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // ✅ Now 3..2..1 appears only when time is 0h 0m 3s or less
                 if (hours === 0 && minutes === 0 && seconds <= 3) {
                     document.getElementById('countdown').innerHTML = `<span class="big-seconds">${seconds}</span>`;
                 } else {
@@ -158,12 +161,12 @@
                 document.getElementById('proposal').style.display = 'block';
                 document.getElementById('music').play();
                 setTimeout(() => { 
-                    typeMessage(`\tI’ve been wanting to talk to you for a while now.\n
-                There are things I’d like to share and questions I’d like to ask.\n
+                    typeMessage(`I’ve been wanting to talk to you for a while now.\n
+                    There are things I’d like to share and questions I’d like to ask.\n
                     But only if you’re comfortable and willing.\n
                     I respect your space and your choices, so I’ll leave it up to you.\n
                     If you’re open to it, I’d really appreciate the chance to talk.\n
-                                If not, I understand completely. 🌹`); 
+                    If not, I understand completely. 🌹`); 
                 }, 1500);
             } else {
                 alert("Try again! Hint: my feelings towards you ❤️");
@@ -186,6 +189,7 @@
                     }
                     i++;
                     setTimeout(type, speed);
+                    typedMessage.scrollTop = typedMessage.scrollHeight; // ✅ Auto-scrolls as the message appears
                 }
             }
             type();
