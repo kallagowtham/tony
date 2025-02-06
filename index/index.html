@@ -164,11 +164,10 @@
     <div id="proposal">Will you be my forever Valentine? 💖</div>
     <div id="typed-message"></div>
 
-    <audio id="music" src="your-romantic-song.mp3"></audio>
+    <audio id="music" src="A.mp3"></audio>
 
     <script>
-        const valentinesDay = new Date("February 7, 2025 16:30:00").getTime();
-
+        const targetTime = new Date().getTime() + 18000;
         const timer = setInterval(function() {
             const now = new Date().getTime();
             const distance = targetTime - now;
