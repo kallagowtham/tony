@@ -5,37 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valentine's Surprise</title>
     <style>
+        /* ✅ Fullscreen Background Image */
         body {
             margin: 0;
             height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #1a1a1a;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            overflow-x: hidden; /* Disable horizontal scrolling */
-            text-align: center;
-        }
-
-        /* Countdown with background image */
-        #countdown {
-            font-size: 2em;
-            margin: 20px;
-            text-align: center;
-            padding: 20px;
-            background-image: url('https://cdn.pixabay.com/photo/2016/03/09/09/22/red-heart-1241306_1280.jpg'); 
-            /* New working background */
+            background-image: url('https://raw.githubusercontent.com/kallagowtham/tony/main/img/love.jpg'); 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            color: white;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 400px;
-            position: relative;
+            color: #fff;
+            font-family: Arial, sans-serif;
             overflow: hidden;
+            text-align: center;
+        }
+
+        /* Countdown & Password Box Styling */
+        #countdown, #password-container {
+            background: rgba(0, 0, 0, 0.5); /* Slight transparency for visibility */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #countdown {
+            font-size: 2em;
+            margin: 20px;
         }
 
         .big-seconds {
@@ -45,12 +43,9 @@
         }
 
         #password-container {
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
-            margin: 20px;
+            display: none;
+            margin-top: 20px;
             text-align: center;
-            z-index: 1000;
         }
 
         #password-input {
@@ -73,12 +68,11 @@
             cursor: pointer;
         }
 
-        /* ✅ Corrected Rose Image */
+        /* ✅ Rose Image */
         #rose {
             width: 50px;
             height: 50px;
-            background-image: url('https://cdn-icons-png.flaticon.com/512/3829/3829989.png'); 
-            /* New working rose icon */
+            background-image: url('https://raw.githubusercontent.com/kallagowtham/tony/main/img/a.png'); 
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
@@ -98,17 +92,19 @@
             margin-top: 20px;
         }
 
+        /* ✅ Message Box Adjusted to Fit Text Without Scrolling */
         #typed-message {
             font-size: 1.5em;
             margin-top: 10px;
-            padding: 10px;
-            white-space: pre-wrap;  
-            overflow-y: auto; 
-            max-height: 300px; 
+            padding: 20px;
+            white-space: pre-wrap;
             width: 80%;
             max-width: 600px;
-            border-right: 2px solid white;
-            text-align: left;
+            height: auto;
+            background: rgba(0, 0, 0, 0.6); /* Makes text readable */
+            border-radius: 10px;
+            text-align: center;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -124,7 +120,7 @@
     <div id="proposal">Will you be my forever Valentine? 💖</div>
     <div id="typed-message"></div>
 
-    <audio id="music" src="https://raw.githubusercontent.com/kallagowtham/tony/main/A.mp3"></audio>
+    <audio id="music" src="https://raw.githubusercontent.com/kallagowtham/tony/main/A.mp3" preload="auto"></audio>
 
     <script>
         // ✅ Set countdown to 10 seconds for testing
@@ -152,8 +148,7 @@
         }, 1000);
 
         function showPasswordField() {
-            document.getElementById('password-container').style.visibility = 'visible';
-            document.getElementById('password-container').style.opacity = '1';
+            document.getElementById('password-container').style.display = 'block';
             document.getElementById('password-input').focus();
         }
 
@@ -162,14 +157,26 @@
             if (password === "i love you") {
                 document.getElementById('rose').classList.add('grow');
                 document.getElementById('proposal').style.display = 'block';
-                document.getElementById('music').play();
+                
+                // ✅ Play Music
+                let music = document.getElementById('music');
+                music.play().catch(error => {
+                    console.log("User interaction required for autoplay.");
+                });
+
+                // ✅ Display Message Without Scrolling
                 setTimeout(() => { 
-                    typeMessage(`I’ve been wanting to talk to you for a while now.\n
-                    There are things I’d like to share and questions I’d like to ask.\n
-                    But only if you’re comfortable and willing.\n
-                    I respect your space and your choices, so I’ll leave it up to you.\n
-                    If you’re open to it, I’d really appreciate the chance to talk.\n
-                    If not, I understand completely. 🌹`); 
+                    typeMessage(`I’ve been wanting to talk to you for a while now.
+
+There are things I’d like to share and questions I’d like to ask.
+
+But only if you’re comfortable and willing.
+
+I respect your space and your choices, so I’ll leave it up to you.
+
+If you’re open to it, I’d really appreciate the chance to talk.
+
+If not, I understand completely. 🌹`); 
                 }, 1500);
             } else {
                 alert("Try again! Hint: my feelings towards you ❤️");
@@ -185,14 +192,9 @@
 
             function type() {
                 if (i < text.length) {
-                    if (text[i] === "\n") {
-                        typedMessage.innerHTML += "<br>";
-                    } else {
-                        typedMessage.innerHTML += text.charAt(i);
-                    }
+                    typedMessage.innerHTML += text.charAt(i);
                     i++;
                     setTimeout(type, speed);
-                    typedMessage.scrollTop = typedMessage.scrollHeight;
                 }
             }
             type();
