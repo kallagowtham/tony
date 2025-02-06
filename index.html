@@ -25,7 +25,7 @@
             margin: 20px;
             text-align: center;
             padding: 20px;
-            background-image:/* url('https://cdn.pixabay.com/photo/2017/02/01/22/02/heart-2036953_1280.jpg');  Replace with your image */
+            background-image: url('https://cdn.pixabay.com/photo/2017/02/01/22/02/heart-2036953_1280.jpg'); 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -35,24 +35,6 @@
             max-width: 400px;
             position: relative;
             overflow: hidden;
-        }
-
-        /* Overlay for readability */
-        #countdown::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 0;
-            border-radius: 10px;
-        }
-
-        #countdown span {
-            position: relative;
-            z-index: 1;
         }
 
         .big-seconds {
@@ -67,7 +49,7 @@
             transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
             margin: 20px;
             text-align: center;
-            z-index: 1000; /* Ensures it is above other elements */
+            z-index: 1000;
         }
 
         #password-input {
@@ -93,8 +75,7 @@
         #rose {
             width: 50px;
             height: 50px;
-           background-image:/* url('https://cdn-icons-png.flaticon.com/512/679/679821.png'); */
-
+            background-image: url('https://cdn-icons-png.flaticon.com/512/679/679821.png');
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
@@ -107,24 +88,6 @@
             height: 300px;
         }
 
-        #sunlight {
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,223,0,0.3) 0%, rgba(255,223,0,0) 70%);
-            opacity: 0;
-            animation: sunlight 2s ease-out;
-            display: none;
-        }
-
-        @keyframes sunlight {
-            0% { opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { opacity: 0; }
-        }
-
         #proposal {
             display: none;
             font-size: 2em;
@@ -135,26 +98,15 @@
         #typed-message {
             font-size: 1.5em;
             margin-top: 10px;
-            white-space: pre-wrap;  /* Ensures line breaks are respected */
+            white-space: pre-wrap;
             overflow: hidden;
             border-right: 2px solid white;
-            width: 0;
-            animation: typing 15s steps(100, end) forwards, blink 0.6s infinite;
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink {
-            50% { border-color: transparent; }
+            width: 100%;
         }
     </style>
 </head>
 <body>
     <div id="countdown"></div>
-    <div id="sunlight"></div>
     
     <div id="password-container">
         <input type="text" id="password-input" placeholder="Enter the secret password 🌹">
@@ -168,24 +120,24 @@
     <audio id="music" src="your-romantic-song.mp3"></audio>
 
     <script>
-        const valentinesDay = new Date("February 7, 2025 16:30:00").getTime();
+        // ✅ Fixed countdown time variable
+        const valentinesDay = new Date().getTime() + 10000; 
 
         const timer = setInterval(function() {
             const now = new Date().getTime();
-            const distance = targetTime - now;
-            
+            const distance = valentinesDay - now;
+
             if (distance < 0) {
                 clearInterval(timer);
                 document.getElementById('countdown').innerHTML = "";
-                showPasswordField();  // Call function to show the password field and focus it
-                document.getElementById('sunlight').style.display = 'block';
-                setTimeout(() => { document.getElementById('sunlight').style.opacity = '0.5'; }, 100);
+                showPasswordField();
             } else {
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                
-                if (seconds <= 3) {
+
+                // ✅ Now 3..2..1 appears only when time is 0h 0m 3s or less
+                if (hours === 0 && minutes === 0 && seconds <= 3) {
                     document.getElementById('countdown').innerHTML = `<span class="big-seconds">${seconds}</span>`;
                 } else {
                     document.getElementById('countdown').innerHTML = `${hours}h ${minutes}m ${seconds}s`;
@@ -196,7 +148,7 @@
         function showPasswordField() {
             document.getElementById('password-container').style.visibility = 'visible';
             document.getElementById('password-container').style.opacity = '1';
-            document.getElementById('password-input').focus();  // Auto-focus
+            document.getElementById('password-input').focus();
         }
 
         function checkPassword() {
@@ -205,7 +157,14 @@
                 document.getElementById('rose').classList.add('grow');
                 document.getElementById('proposal').style.display = 'block';
                 document.getElementById('music').play();
-                setTimeout(() => { typeMessage("I’ve been wanting to talk to you for a while now.There are things I’d like to share and questions I’d like to ask.But only if you’re comfortable and willing.I respect your space and your choices, so I’ll leave it up to you.If you’re open to it, I’d really appreciate the chance to talk.If not, I understand completely. 🌹"); }, 1500);
+                setTimeout(() => { 
+                    typeMessage(`\tI’ve been wanting to talk to you for a while now.\n
+                There are things I’d like to share and questions I’d like to ask.\n
+                    But only if you’re comfortable and willing.\n
+                    I respect your space and your choices, so I’ll leave it up to you.\n
+                    If you’re open to it, I’d really appreciate the chance to talk.\n
+                                If not, I understand completely. 🌹`); 
+                }, 1500);
             } else {
                 alert("Try again! Hint: my feelings towards you ❤️");
             }
@@ -213,17 +172,18 @@
 
         function typeMessage(text) {
             let i = 0;
-            const speed = 100;
+            const speed = 50;
             const typedMessage = document.getElementById('typed-message');
             typedMessage.innerHTML = "";
             typedMessage.style.width = "100%";
 
-            // Replace line breaks with the HTML <br> tag
-            text = text.replace(/\n/g, "<br>");
-
             function type() {
                 if (i < text.length) {
-                    typedMessage.innerHTML += text.charAt(i);
+                    if (text[i] === "\n") {
+                        typedMessage.innerHTML += "<br>";
+                    } else {
+                        typedMessage.innerHTML += text.charAt(i);
+                    }
                     i++;
                     setTimeout(type, speed);
                 }
